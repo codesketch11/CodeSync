@@ -9,7 +9,30 @@
 * 🟢 You can import this file directly.
 */
 
+export const ParticipantRole = {
+  HOST: 'HOST',
+  MEMBER: 'MEMBER'
+} as const
+
+export type ParticipantRole = (typeof ParticipantRole)[keyof typeof ParticipantRole]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const Difficulty = {
+  EASY: 'EASY',
+  MEDIUM: 'MEDIUM',
+  HARD: 'HARD'
+} as const
+
+export type Difficulty = (typeof Difficulty)[keyof typeof Difficulty]
+
+
+export const SubmissionStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  WRONG_ANSWER: 'WRONG_ANSWER',
+  RUNTIME_ERROR: 'RUNTIME_ERROR',
+  TIME_LIMIT: 'TIME_LIMIT',
+  COMPILATION_ERROR: 'COMPILATION_ERROR'
+} as const
+
+export type SubmissionStatus = (typeof SubmissionStatus)[keyof typeof SubmissionStatus]

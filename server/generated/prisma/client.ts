@@ -44,3 +44,23 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Room
+ * 
+ */
+export type Room = Prisma.RoomModel
+/**
+ * Model RoomParticipant
+ * 
+ */
+export type RoomParticipant = Prisma.RoomParticipantModel
+/**
+ * Model Problem
+ * 
+ */
+export type Problem = Prisma.ProblemModel
+/**
+ * Model Submission
+ * 
+ */
+export type Submission = Prisma.SubmissionModel

@@ -6,12 +6,140 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique
-  passwordHash String
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+// ================================
+// ENUMS
+// ================================
+
+enum ParticipantRole {
+  HOST
+  MEMBER
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum SubmissionStatus {
+  PENDING
+  ACCEPTED
+  WRONG_ANSWER
+  RUNTIME_ERROR
+  TIME_LIMIT
+  COMPILATION_ERROR
+}
+
+
+// ================================
+// USER
+// ================================
+
+model User {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  passwordHash    String
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  roomsHosted     Room[]           @relation("RoomHost")
+  participations  RoomParticipant[]
+  submissions     Submission[]
+}
+
+
+// ================================
+// ROOM
+// ================================
+
+model Room {
+  id          String   @id @default(uuid())
+  name        String
+  roomCode    String   @unique
+
+  hostId      String
+  problemId   String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  host        User   @relation("RoomHost", fields: [hostId], references: [id], onDelete: Cascade)
+  problem     Problem? @relation(fields: [problemId], references: [id], onDelete: SetNull)
+
+  participants RoomParticipant[]
+  submissions  Submission[]
+}
+
+
+// ================================
+// ROOM PARTICIPANT
+// ================================
+
+model RoomParticipant {
+  roomId    String
+  userId    String
+
+  role      ParticipantRole @default(MEMBER)
+  joinedAt  DateTime        @default(now())
+
+  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([roomId, userId])
+}
+
+
+// ================================
+// PROBLEM
+// ================================
+
+model Problem {
+  id            String     @id @default(uuid())
+
+  title         String
+  slug          String     @unique
+  description   String
+  difficulty    Difficulty
+
+  inputFormat   String?
+  outputFormat  String?
+  constraints   String?
+
+  examples      Json?
+  starterCode   Json?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  rooms         Room[]
+  submissions   Submission[]
+}
+
+
+// ================================
+// SUBMISSION
+// ================================
+
+model Submission {
+  id          String           @id @default(uuid())
+
+  code        String
+  language    String
+  status      SubmissionStatus @default(PENDING)
+
+  runtimeMs   Int?
+  memoryKb    Int?
+
+  userId      String
+  roomId      String
+  problemId   String
+
+  createdAt   DateTime @default(now())
+
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room        Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  problem     Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 }
