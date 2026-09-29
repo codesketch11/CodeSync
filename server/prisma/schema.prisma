@@ -63,6 +63,9 @@ model Room {
   hostId      String
   problemId   String?
 
+  code     String @default("")
+  language String @default("cpp")
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -110,6 +113,7 @@ model Problem {
 
   examples      Json?
   starterCode   Json?
+  testCases     Json?
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

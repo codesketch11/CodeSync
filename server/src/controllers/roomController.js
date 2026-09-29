@@ -157,6 +157,15 @@ const getRoom = async (req, res) => {
                     },
                 },
 
+                problem: {
+                    select: {
+                        id: true,
+                        title: true,
+                        slug: true,
+                        difficulty: true,
+                    },
+                },
+
                 participants: {
                     include: {
                         user: {
@@ -177,6 +186,23 @@ const getRoom = async (req, res) => {
             });
         }
 
+        const userId = req.user.userId;
+
+        const participant = await prisma.roomParticipant.findUnique({
+            where: {
+                roomId_userId: {
+                    roomId: room.id,
+                    userId: userId,
+                },
+            },
+        });
+
+        if (!participant) {
+            return res.status(403).json({
+                message: "You are not a participant in this room",
+            });
+        }
+
         res.status(200).json({
             room: {
                 id: room.id,
@@ -184,6 +210,9 @@ const getRoom = async (req, res) => {
                 roomCode: room.roomCode,
                 createdAt: room.createdAt,
                 host: room.host,
+                problem: room.problem,
+                code: room.code,
+                language: room.language,
             },
 
             participants: room.participants.map((participant) => ({
@@ -267,6 +296,93 @@ const leaveRoom = async (req, res) => {
     }
 };
 
+const assignProblem = async (req, res) => {
+    try {
+        const { roomCode } = req.params;
+        const { problemId } = req.body;
+        const userId = req.user.userId;
+
+        if (!problemId) {
+            return res.status(400).json({
+                message: "Problem ID is required",
+            });
+        }
+
+        // Find the room
+        const room = await prisma.room.findUnique({
+            where: {
+                roomCode: roomCode.toUpperCase(),
+            },
+        });
+
+        if (!room) {
+            return res.status(404).json({
+                message: "Room not found",
+            });
+        }
+
+        // Check that the requester is the host
+        if (room.hostId !== userId) {
+            return res.status(403).json({
+                message: "Only the host can assign a problem",
+            });
+        }
+
+        // Check that the problem exists
+        const problem = await prisma.problem.findUnique({
+            where: {
+                id: problemId,
+            },
+        });
+
+        if (!problem) {
+            return res.status(404).json({
+                message: "Problem not found",
+            });
+        }
+
+        // Assign the problem to the room
+        const starterCode = problem.starterCode?.cpp || "";
+
+        const updatedRoom = await prisma.room.update({
+            where: {
+                id: room.id,
+            },
+
+            data: {
+                problemId: problem.id,
+                code: starterCode,
+                language: "cpp",
+            },
+        });
+
+        res.status(200).json({
+            message: "Problem assigned successfully",
+
+            room: {
+                id: updatedRoom.id,
+                name: updatedRoom.name,
+                roomCode: updatedRoom.roomCode,
+                problemId: updatedRoom.problemId,
+            },
+
+            problem: {
+                id: problem.id,
+                title: problem.title,
+                slug: problem.slug,
+                difficulty: problem.difficulty,
+            },
+        });
+
+    } catch (error) {
+        console.error("Assign problem error:", error);
+
+        res.status(500).json({
+            message: "Server error",
+        });
+    }
+};
+
 module.exports = {
-    createRoom, joinRoom, getRoom, leaveRoom,
+    createRoom, joinRoom, getRoom, leaveRoom, assignProblem,
 };
