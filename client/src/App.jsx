@@ -8,6 +8,7 @@ import Problems from "./pages/Problems";
 import ProblemDetails from "./pages/ProblemDetails";
 import Room from "./pages/Room";
 import NotFound from "./pages/Notfound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -18,12 +19,14 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
 
-        <Route path="/problems" element={<Problems />} />
-        <Route path="/problems/:id" element={<ProblemDetails />} />
+            <Route path="/problems" element={<Problems />} />
+            <Route path="/problems/:id" element={<ProblemDetails />} />
 
-        <Route path="/room/:roomId" element={<Room />} />
+            <Route path="/room/:roomCode" element={<Room />} />
+        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>
