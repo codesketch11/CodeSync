@@ -66,14 +66,12 @@ CodeSync/
 │   ├── public/
 │   ├── package.json
 │   ├── vite.config.js
-│   └── README.md
 │
 ├── server/                 # Express API + Prisma + database layer
 │   ├── src/
 │   ├── prisma/ 
 │   ├── .env.example
 │   ├── package.json
-│   └── README.md
 │
 ├── README.md
 └── .gitignore
@@ -210,7 +208,7 @@ http://localhost:5173
 
 ### Home / Landing Page
 
-![CodeSync Collaboration](screenshots/landing.png)
+![CodeSync Landing Page](screenshots/landing.png)
 
 ### Dashboard
 
