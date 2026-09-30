@@ -7,7 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Problems from "./pages/Problems";
 import ProblemDetails from "./pages/ProblemDetails";
 import Room from "./pages/Room";
-import NotFound from "./pages/Notfound";
+import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
@@ -20,12 +20,12 @@ const App = () => {
         <Route path="/register" element={<Register />} />
 
         <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
 
-            <Route path="/problems" element={<Problems />} />
-            <Route path="/problems/:id" element={<ProblemDetails />} />
+          <Route path="/problems" element={<Problems />} />
+          <Route path="/problems/:id" element={<ProblemDetails />} />
 
-            <Route path="/room/:roomCode" element={<Room />} />
+          <Route path="/room/:roomCode" element={<Room />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

@@ -1,0 +1,15 @@
+services:
+  redis:
+    image: redis:7-alpine
+
+  piston:
+    image: ghcr.io/engineer-man/piston:latest
+    privileged: true
+    volumes:
+      - .:/piston
+    ports:
+      - "2000:2000"
+    environment:
+      PISTON_REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis

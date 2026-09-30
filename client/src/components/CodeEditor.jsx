@@ -10,6 +10,12 @@ const CodeEditor = ({ code, language, onChange }) => {
             onChange={onChange}
             options={{
                 fontSize: 14,
+                lineHeight: 22,
+                tabSize: 4,
+                wordWrap: "off",
+                scrollBeyondLastLine: false,
+                renderLineHighlight: "line",
+                padding: { top: 12, bottom: 12 },
                 minimap: {
                     enabled: false,
                 },

@@ -61,6 +61,10 @@ const setupSocket = (httpServer) => {
             }
         });
 
+        socket.on("leave-room", ({ roomCode }) => {
+            if (roomCode) socket.leave(roomCode.toUpperCase());
+        });
+
         // ================================
         // CODE CHANGE
         // ================================

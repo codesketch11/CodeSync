@@ -8,6 +8,7 @@ const prisma = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const problemRoutes = require("./routes/problemRoutes");
+const executionRoutes = require("./routes/executionRoutes");
 const setupSocket = require("./socket");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/problems", problemRoutes);
+app.use("/api/rooms", executionRoutes);
 
 app.get("/", (req, res) =>{
     res.json({
